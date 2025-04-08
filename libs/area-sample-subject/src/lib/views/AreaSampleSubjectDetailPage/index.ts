@@ -1,0 +1,1 @@
+export { AreaSampleSubjectDetailPage } from './AreaSampleSubjectDetailPage';

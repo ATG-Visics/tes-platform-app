@@ -1,0 +1,1 @@
+export { AreaSampleSubjectUpdatePage } from './AreaSampleSubjectUpdatePage';

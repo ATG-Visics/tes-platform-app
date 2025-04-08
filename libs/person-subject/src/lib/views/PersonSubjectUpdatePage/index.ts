@@ -1,0 +1,1 @@
+export { PersonSubjectUpdatePage } from './PersonSubjectUpdatePage';

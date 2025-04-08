@@ -1,0 +1,126 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/tes-platform/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/tes-platform",
+        "index": "apps/tes-platform/src/index.html",
+        "baseHref": "/",
+        "main": "apps/tes-platform/src/main.tsx",
+        "polyfills": "apps/tes-platform/src/polyfills.ts",
+        "tsConfig": "apps/tes-platform/tsconfig.app.json",
+        "assets": [
+          "apps/tes-platform/src/favicon.ico",
+          "apps/tes-platform/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/tes-platform/src/environments/environment.ts",
+              "with": "apps/tes-platform/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        },
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/tes-platform/src/environments/environment.ts",
+              "with": "apps/tes-platform/src/environments/environment.staging.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "tes-platform:build",
+        "hmr": true,
+        "proxyConfig": "apps/tes-platform/proxy.config.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "tes-platform:build:development"
+        },
+        "production": {
+          "buildTarget": "tes-platform:build:production",
+          "hmr": false
+        },
+        "staging": {
+          "buildTarget": "tes-platform:build:staging",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/tes-platform/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "storybook": {
+      "executor": "@nrwl/storybook:storybook",
+      "options": {
+        "uiFramework": "@storybook/react",
+        "port": 4400,
+        "ci": true,
+        "config": {
+          "configFolder": "apps/tes-platform/.storybook"
+        }
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@nrwl/storybook:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "uiFramework": "@storybook/react",
+        "outputPath": "dist/storybook/tes-platform",
+        "config": {
+          "configFolder": "apps/tes-platform/.storybook"
+        }
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

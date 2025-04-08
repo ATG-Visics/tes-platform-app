@@ -1,0 +1,26 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": false,
+    "noEmit": true,
+    "types": []
+  },
+  "include": [],
+  "files": [],
+  "references": [
+    {
+      "path": "./mui/tsconfig.json"
+    },
+    {
+      "path": "./material-color-tool/tsconfig.json"
+    },
+    {
+      "path": "./static-assets/tsconfig.json"
+    },
+    {
+      "path": "./sanitize-react-html/tsconfig.json"
+    }
+  ]
+}

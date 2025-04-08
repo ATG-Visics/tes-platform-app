@@ -1,0 +1,77 @@
+import {
+  mapListResult,
+  useOrdering,
+  usePagination,
+  useSearch,
+} from '@tes/utils-hooks';
+import { useGetAllSamplesQuery } from '../api';
+import {
+  SAMPLE_FEATURE_KEY,
+  sampleActions,
+  SampleState,
+} from '../sample.slice';
+import { useEffect } from 'react';
+
+export function useFetchList() {
+  const { itemsPerPage, page, onRowPerPageChange, onPageChange } =
+    usePagination<{ [SAMPLE_FEATURE_KEY]: SampleState }>(
+      SAMPLE_FEATURE_KEY,
+      sampleActions,
+    );
+
+  const { search, debouncedSearch, onSearchChange } = useSearch<{
+    [SAMPLE_FEATURE_KEY]: SampleState;
+  }>(SAMPLE_FEATURE_KEY, sampleActions);
+
+  const { orderBy, orderDirection, onUpdateOrdering } = useOrdering<{
+    [SAMPLE_FEATURE_KEY]: SampleState;
+  }>(SAMPLE_FEATURE_KEY, sampleActions);
+
+  useEffect(() => {
+    if (search) {
+      onPageChange(null, 0);
+      return;
+    }
+    return;
+  }, [onPageChange, search]);
+
+  const response = useGetAllSamplesQuery(
+    {
+      search: debouncedSearch,
+      page,
+      limit: itemsPerPage,
+      orderBy,
+    },
+    { refetchOnMountOrArgChange: true },
+  );
+
+  const { isFetching, isLoading, data, isSuccess } = response;
+  const { itemCount, itemList } = mapListResult(data);
+
+  const showPagination = itemCount > itemsPerPage;
+
+  const pageCount = Math.ceil(itemCount / itemsPerPage);
+
+  return {
+    showPagination,
+    pageCount,
+    itemsPerPage,
+    page,
+    onRowPerPageChange,
+    onPageChange,
+
+    isLoading,
+    isFetching,
+    isSuccess,
+    itemCount,
+    itemList,
+
+    search,
+    debouncedSearch,
+    onSearchChange,
+
+    orderBy,
+    orderDirection,
+    onUpdateOrdering,
+  };
+}

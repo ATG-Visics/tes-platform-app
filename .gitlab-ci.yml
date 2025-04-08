@@ -1,0 +1,54 @@
+image: node:16.18.1
+
+variables:
+  GIT_DEPTH: 100
+
+stages:
+  - setup
+  - test
+  - build
+
+.nx_cache:
+  - key: $CI_COMMIT_REF_SLUG
+    paths: node_modules/.cache/nx
+
+cache:
+  - key: npm
+    paths:
+      - .npm
+  - key: $CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules/.cache/nx
+
+before_script:
+  - npm ci --cache .npm --prefer-offline --legacy-peer-deps
+
+lint:
+  interruptible: true
+  script:
+    - $(npm bin)/nx affected:lint --base ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --parallel --format junit --outputFile reports/eslint/{project.name}.junit --skip-nx-cache
+  only:
+    - merge_requests
+  artifacts:
+    when: always
+    reports:
+      junit: reports/**/*.junit
+
+build:
+  interruptible: true
+  script:
+    - $(npm bin)/nx affected:build --base ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --parallel --with-deps
+  only:
+    - merge_requests
+
+pages:
+  stage: build
+  interruptible: true
+  script:
+    - $(npm bin)/nx build-storybook tes-platform
+    - mv dist/storybook/tes-platform public
+  artifacts:
+    paths:
+      - 'public'
+  only:
+    - master
